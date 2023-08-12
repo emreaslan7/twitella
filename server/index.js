@@ -9,7 +9,11 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import postsRoutes from "./routes/postsRoutes.js";
 import { register } from "./controllers/authController.js";
+import * as postsController from "./controllers/postsController.js";
+import { verifyToken } from "./middleware/auth.js";
 
 // CONFIGURATION ----------------------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
@@ -38,9 +42,17 @@ const upload = multer({ storage });
 
 // ROUTES WITH FILE --------------------------------------------------------------
 app.post("/auth/register", upload.single("picture"), register);
+app.post(
+  "/posts",
+  verifyToken,
+  upload.single("picture"),
+  postsController.createPost
+);
 
 // ROUTES -----------------------------------------------------------------------
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/posts", postsRoutes);
 
 // MONGOOSE SETUP ----------------------------------------------------------------
 const PORT = process.env.PORT || 6001;
