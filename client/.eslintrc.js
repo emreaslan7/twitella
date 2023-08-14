@@ -1,5 +1,6 @@
 module.exports = {
   // ...
   plugins: ['prettier'], // Burada 'prettier' eklendi
+  // parser: 'babel-eslint',
   // ...
 };
