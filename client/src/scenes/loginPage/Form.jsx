@@ -73,7 +73,7 @@ const Form = () => {
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // JSON verisi gönderiyoruz
+          'Content-Type': 'application/json', // sending JSON to server
         },
         body: JSON.stringify(dataToSend),
       },
