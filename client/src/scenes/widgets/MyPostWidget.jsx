@@ -57,31 +57,58 @@ const MyPostWidget = ({ picturePath }) => {
   //   setImage(null);
   //   setPost('');
   // };
+  // const handlePost = async () => {
+  //   const postData = {
+  //     userId: _id,
+  //     description: post,
+  //     // Diğer form verileri burada eklenir
+  //   };
+
+  //   if (image) {
+  //     postData.picture = image;
+  //     postData.picturePath = image.name;
+  //   }
+
+  //   const response = await fetch('http://localhost:3001/posts', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     body: JSON.stringify(postData),
+  //   });
+
+  //   const posts = await response.json();
+  //   dispatch(setPosts({ posts }));
+  //   setImage(null);
+  //   setPost('');
+  // };
+
   const handlePost = async () => {
-    const postData = {
-      userId: _id,
-      description: post,
-      // Diğer form verileri burada eklenir
-    };
+    const formData = new FormData();
+    formData.append('userId', _id);
+    formData.append('description', post);
 
     if (image) {
-      postData.picture = image;
-      postData.picturePath = image.name;
+      formData.append('picture', image);
     }
 
-    const response = await fetch('http://localhost:3001/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(postData),
-    });
+    try {
+      const response = await fetch('http://localhost:3001/posts', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
-    setImage(null);
-    setPost('');
+      const posts = await response.json();
+      dispatch(setPosts({ posts }));
+      setImage(null);
+      setPost('');
+    } catch (error) {
+      console.error('Error posting:', error);
+    }
   };
 
   return (

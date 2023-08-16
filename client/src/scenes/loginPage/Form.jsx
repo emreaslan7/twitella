@@ -56,34 +56,63 @@ const Form = () => {
   const isLogin = pageType === 'login';
   const isRegister = pageType === 'register';
 
+  // const register = async (values, onSubmitProps) => {
+  //   const dataToSend = {
+  //     picturePath: values.picture.name,
+  //     //...
+  //   };
+
+  //   for (let key in values) {
+  //     if (values.hasOwnProperty(key)) {
+  //       dataToSend[key] = values[key];
+  //     }
+  //   }
+
+  //   const savedUserResponse = await fetch(
+  //     'http://localhost:3001/auth/register',
+  //     {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json', // sending JSON to server
+  //       },
+  //       body: JSON.stringify(dataToSend),
+  //     },
+  //   );
+
+  //   const savedUser = await savedUserResponse.json();
+  //   onSubmitProps.resetForm();
+
+  //   if (savedUser) {
+  //     setPageType('login');
+  //   }
+  // };
   const register = async (values, onSubmitProps) => {
-    const dataToSend = {
-      picturePath: values.picture.name,
-      //...
-    };
+    const formData = new FormData();
+    formData.append('picturePath', values.picture);
 
     for (let key in values) {
       if (values.hasOwnProperty(key)) {
-        dataToSend[key] = values[key];
+        formData.append(key, values[key]);
       }
     }
 
-    const savedUserResponse = await fetch(
-      'http://localhost:3001/auth/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // sending JSON to server
+    try {
+      const savedUserResponse = await fetch(
+        'http://localhost:3001/auth/register',
+        {
+          method: 'POST',
+          body: formData,
         },
-        body: JSON.stringify(dataToSend),
-      },
-    );
+      );
 
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+      const savedUser = await savedUserResponse.json();
+      onSubmitProps.resetForm();
 
-    if (savedUser) {
-      setPageType('login');
+      if (savedUser) {
+        setPageType('login');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
     }
   };
 

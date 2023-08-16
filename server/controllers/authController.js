@@ -1,9 +1,19 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
 export const register = async (req, res) => {
  try {
+  const result = await cloudinary.uploader.upload(
+   req.files.picturePath.tempFilePath,
+   {
+    use_filename: true,
+    folder: "twitella",
+   }
+  );
+
   const {
    firstName,
    lastName,
@@ -23,7 +33,7 @@ export const register = async (req, res) => {
    lastName,
    email,
    password: passwordHash,
-   picturePath,
+   picturePath: result.secure_url,
    friends,
    location,
    occupation,
@@ -31,6 +41,8 @@ export const register = async (req, res) => {
    impressions: Math.floor(Math.random() * 1000),
   });
   const savedUser = await newUser.save();
+
+  fs.unlinkSync(req.files.picturePath.tempFilePath);
   res.status(201).json(savedUser);
  } catch (err) {
   res.status(500).json({ error: err });
