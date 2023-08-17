@@ -7,7 +7,7 @@ import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 import { useEffect } from 'react';
 
-const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({ friendId, name, subtitle, userPicturePath, timeAgo }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
@@ -66,6 +66,11 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           <Typography color={medium} fontSize="0.75rem">
             {subtitle}
           </Typography>
+          {timeAgo && (
+            <Typography color={medium} fontSize="0.75rem">
+              {timeAgo}
+            </Typography>
+          )}
         </Box>
       </FlexBetween>
       {friendId !== _id && (

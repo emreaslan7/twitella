@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   token: null,
   posts: [],
+  postWithComments: [],
 };
 
 export const authSlice = createSlice({
@@ -39,10 +40,33 @@ export const authSlice = createSlice({
       });
       state.posts = updatedPosts;
     },
+
+    setPostCommentLike: (state, action) => {
+      console.log(action.payload);
+      const updatedComment = state.postWithComments.map((comment) => {
+        if (comment._id === action.payload.comment._id)
+          return action.payload.comment;
+        return comment;
+      });
+      state.postWithComments = updatedComment;
+    },
+
+    setPostWithComments: (state, action) => {
+      console.log('action payload: ', action.payload);
+      state.postWithComments = action.payload;
+    },
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } =
-  authSlice.actions;
+export const {
+  setMode,
+  setLogin,
+  setLogout,
+  setFriends,
+  setPosts,
+  setPost,
+  setPostWithComments,
+  setPostCommentLike,
+} = authSlice.actions;
 
 export default authSlice.reducer;

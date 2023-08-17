@@ -8,9 +8,12 @@ import { Box, Divider, IconButton, Typography, useTheme } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPost } from 'state';
+import state, { setPost, setPostWithComments } from 'state';
+import CommentsWidget from './CommentsWidget';
+import createdTimeConvert from 'utils/createdTimeConvert.js';
+import MyCommentWidget from './MyCommentWidget';
 
 const PostWidget = ({
   postId,
@@ -22,9 +25,15 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  createdAt,
 }) => {
   const [isComments, setIsComments] = useState(false);
+  const [timeAgo, setTimeAgo] = useState(null);
   const dispatch = useDispatch();
+  // const posts = useSelector((state) => state.posts);
+  // const post = posts.find((post) => post._id === postId);
+  // const postComments = post.comments;
+  const postComments = useSelector((state) => state.postWithComments);
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
@@ -47,6 +56,27 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  const getPostComments = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${postId}/comments`,
+      {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    const postComments = await response.json();
+    dispatch(setPostWithComments(postComments));
+  };
+
+  const handleShowComments = () => {
+    if (!isComments) {
+      getPostComments();
+    }
+    setIsComments(!isComments);
+  };
+  useEffect(() => {
+    setTimeAgo(createdTimeConvert(createdAt));
+  }, []); //eslint-disable
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -54,6 +84,7 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        timeAgo={timeAgo}
       />
       <Typography color={main} sx={{ mt: '1rem' }}>
         {description}
@@ -81,10 +112,10 @@ const PostWidget = ({
           </FlexBetween>
 
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={() => setIsComments(!isComments)}>
+            <IconButton onClick={() => handleShowComments()}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography>{comments?.length}</Typography>
           </FlexBetween>
         </FlexBetween>
 
@@ -94,15 +125,11 @@ const PostWidget = ({
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem' }}>
-                {comment}
-              </Typography>
-            </Box>
+          {postComments?.map((comment, i) => (
+            <CommentsWidget comment={comment} key={comment._id} />
           ))}
           <Divider />
+          <MyCommentWidget picturePath={userPicturePath} />
         </Box>
       )}
     </WidgetWrapper>

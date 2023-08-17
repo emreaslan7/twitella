@@ -13,17 +13,8 @@ export const getUser = async (req, res, next) => {
 export const getUserFriends = async (req, res, next) => {
  try {
   const { id } = req.params;
-  const user = await User.findById(id);
-
-  const friends = await Promise.all(
-   user.friends.map((id) => User.findById(id))
-  );
-  const formattedFriends = friends.map(
-   ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-    return { _id, firstName, lastName, occupation, location, picturePath };
-   }
-  );
-  res.status(200).json(formattedFriends);
+  const user = await User.findById(id).populate("friends");
+  res.status(200).json(user.friends);
  } catch (err) {
   res.status(404).json({ message: err.message });
  }

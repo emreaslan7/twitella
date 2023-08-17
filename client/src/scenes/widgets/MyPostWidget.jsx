@@ -25,6 +25,7 @@ import WidgetWrapper from 'components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
+import CustomAlert from 'components/CustomAlert';
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -38,51 +39,18 @@ const MyPostWidget = ({ picturePath }) => {
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
-  // const handlePost = async () => {
-  //   const formData = new FormData();
-  //   formData.append('userId', _id);
-  //   formData.append('description', post);
-  //   if (image) {
-  //     formData.append('picture', image);
-  //     formData.append('picturePath', image.name);
-  //   }
-
-  //   const response = await fetch(`http://localhost:3001/posts`, {
-  //     method: 'POST',
-  //     headers: { Authorization: `Bearer ${token}` },
-  //     body: formData,
-  //   });
-  //   const posts = await response.json();
-  //   dispatch(setPosts({ posts }));
-  //   setImage(null);
-  //   setPost('');
-  // };
-  // const handlePost = async () => {
-  //   const postData = {
-  //     userId: _id,
-  //     description: post,
-  //     // Diğer form verileri burada eklenir
-  //   };
-
-  //   if (image) {
-  //     postData.picture = image;
-  //     postData.picturePath = image.name;
-  //   }
-
-  //   const response = await fetch('http://localhost:3001/posts', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //     body: JSON.stringify(postData),
-  //   });
-
-  //   const posts = await response.json();
-  //   dispatch(setPosts({ posts }));
-  //   setImage(null);
-  //   setPost('');
-  // };
+  // snackbar alerts start
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  };
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlert(false);
+  };
+  // snackbar alerts end
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -103,6 +71,8 @@ const MyPostWidget = ({ picturePath }) => {
       });
 
       const posts = await response.json();
+      console.log('posts', posts);
+      handleOpenAlert();
       dispatch(setPosts({ posts }));
       setImage(null);
       setPost('');
@@ -113,6 +83,12 @@ const MyPostWidget = ({ picturePath }) => {
 
   return (
     <WidgetWrapper>
+      <CustomAlert
+        open={openAlert}
+        onClose={handleCloseAlert}
+        message="Congrats! You've shared something new!"
+        severity="info"
+      />
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase

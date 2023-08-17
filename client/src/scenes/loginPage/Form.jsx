@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { setLogin } from 'state';
 import Dropzone from 'react-dropzone';
 import FlexBetween from 'components/FlexBetween';
+import CustomAlert from 'components/CustomAlert';
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required('required'),
@@ -55,37 +56,24 @@ const Form = () => {
   const isNonMobile = useMediaQuery('(min-width: 600px)');
   const isLogin = pageType === 'login';
   const isRegister = pageType === 'register';
+  // snackbar alerts start
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('danger');
 
-  // const register = async (values, onSubmitProps) => {
-  //   const dataToSend = {
-  //     picturePath: values.picture.name,
-  //     //...
-  //   };
+  const handleOpenAlert = (alertType, msg) => {
+    setAlertType(alertType);
+    setAlertMessage(msg);
+    setOpenAlert(true);
+  };
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlert(false);
+  };
+  // snackbar alerts end
 
-  //   for (let key in values) {
-  //     if (values.hasOwnProperty(key)) {
-  //       dataToSend[key] = values[key];
-  //     }
-  //   }
-
-  //   const savedUserResponse = await fetch(
-  //     'http://localhost:3001/auth/register',
-  //     {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json', // sending JSON to server
-  //       },
-  //       body: JSON.stringify(dataToSend),
-  //     },
-  //   );
-
-  //   const savedUser = await savedUserResponse.json();
-  //   onSubmitProps.resetForm();
-
-  //   if (savedUser) {
-  //     setPageType('login');
-  //   }
-  // };
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     formData.append('picturePath', values.picture);
@@ -109,7 +97,10 @@ const Form = () => {
       onSubmitProps.resetForm();
 
       if (savedUser) {
-        setPageType('login');
+        handleOpenAlert();
+        setTimeout(() => {
+          setPageType('login');
+        }, 4000);
       }
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -124,15 +115,21 @@ const Form = () => {
     });
 
     const loggedIn = await loggedInResponse.json();
+    console.log('Loggedin: ', loggedIn);
     onSubmitProps.resetForm();
-    if (loggedIn) {
+    if (loggedIn.user) {
+      handleOpenAlert('success', 'You are successfully logged in');
       dispatch(
         setLogin({
           user: loggedIn.user,
           token: loggedIn.token,
         }),
       );
-      navigate('/home');
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000);
+    } else {
+      handleOpenAlert('error', loggedIn.msg);
     }
   };
 
@@ -304,6 +301,21 @@ const Form = () => {
                 : 'Already have an account? Login here.'}
             </Typography>
           </Box>
+          {isLogin ? (
+            <CustomAlert
+              open={openAlert}
+              onClose={handleCloseAlert}
+              message={alertMessage}
+              severity={alertType}
+            />
+          ) : (
+            <CustomAlert
+              open={openAlert}
+              onClose={handleCloseAlert}
+              message="Welcome to the Twitella Family"
+              severity="success"
+            />
+          )}
         </form>
       )}
     </Formik>

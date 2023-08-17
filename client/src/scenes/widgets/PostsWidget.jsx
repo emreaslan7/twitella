@@ -8,17 +8,17 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
 
+  console.log('PostWidget.jsx', posts);
+
   const getPosts = async () => {
     const response = await fetch('http://localhost:3001/posts', {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    console.log('data');
-    dispatch(setPosts({ posts: data }));
+    const reversedArray = [...data].reverse();
+    dispatch(setPosts({ posts: reversedArray }));
   };
-
-  console.log(posts);
 
   const getUserPosts = async () => {
     const response = await fetch(
@@ -29,8 +29,13 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       },
     );
     const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+    const reversedArray = [...data].reverse();
+    dispatch(setPosts({ posts: reversedArray }));
   };
+
+  // useEffect(() => {
+  //   dispatch(setPosts({ posts: [] }));
+  // }, []);
 
   useEffect(() => {
     if (isProfile) {
@@ -54,6 +59,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           userPicturePath,
           likes,
           comments,
+          createdAt,
         }) => (
           <PostWidget
             key={_id}
@@ -66,6 +72,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}
+            createdAt={createdAt}
           />
         ),
       )}

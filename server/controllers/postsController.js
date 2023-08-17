@@ -5,13 +5,13 @@ import fs from "fs";
 
 export const createPost = async (req, res) => {
  try {
-  const result = await cloudinary.uploader.upload(
-   req.files.picture.tempFilePath,
-   {
+  let result = null;
+  if (req.files) {
+   result = await cloudinary.uploader.upload(req.files.picture.tempFilePath, {
     use_filename: true,
     folder: "twitella",
-   }
-  );
+   });
+  }
 
   const { userId, description, picturePath } = req.body;
   const user = await User.findById(userId);
@@ -22,7 +22,7 @@ export const createPost = async (req, res) => {
    location: user.location,
    description,
    userPicturePath: user.picturePath,
-   picturePath: result.secure_url,
+   picturePath: result ? result.secure_url : "",
    likes: {},
    comments: [],
   });
@@ -30,7 +30,9 @@ export const createPost = async (req, res) => {
 
   const post = await Post.find();
 
-  fs.unlinkSync(req.files.picture.tempFilePath);
+  if (req.files) {
+   fs.unlinkSync(req.files.picture.tempFilePath);
+  }
   res.status(201).json(post);
  } catch (err) {
   res.status(409).json({ msg: err.message });

@@ -28,9 +28,12 @@ const UserSchema = new mongoose.Schema(
    type: String,
    default: "",
   },
-  friends: {
-   type: Array,
-  },
+  friends: [
+   {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Reference to the User model
+   },
+  ],
   location: String,
   occupation: String,
   viewedProfile: Number,
