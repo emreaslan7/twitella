@@ -7,10 +7,11 @@ export const postComment = async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
 
+  console.log(req.user);
+
   const post = await Post.findById(id);
-  console.log(post);
   const newComment = new Comment({
-   user: req.user.id, // Yorumu yapan kullanıcının ID'si
+   user: req.user.id, // Yorumu yapan kullanıcının ID'si yerine User'ın
    post: id, // Yorumun yapıldığı gönderinin ID'si
    text: text,
    likes: {},
@@ -22,7 +23,24 @@ export const postComment = async (req, res) => {
   post.comments.push(newComment._id); // Yorum ID'sini ekleyin
   await post.save();
 
-  res.status(201).json(newComment);
+  const user = await User.findById(
+   req.user.id,
+   "firstName lastName picturePath"
+  );
+  const commentWithUser = {
+   text: newComment.text,
+   likes: newComment.likes,
+   createdAt: newComment.createdAt,
+   post: newComment.post,
+   _id: newComment._id,
+   user: {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    picturePath: user.picturePath,
+   },
+  };
+
+  res.status(201).json(commentWithUser);
  } catch (err) {
   res.status(409).json({ msg: err.message });
  }
@@ -86,12 +104,6 @@ export const likeComment = async (req, res) => {
   }
 
   comment.user = commentUser;
-
-  // const updatedComment = await Comment.findByIdAndUpdate(
-  //  commentId,
-  //  { likes: comment.likes },
-  //  { new: true }
-  // );
   const updatedComment = await comment.save();
 
   console.log(updatedComment);

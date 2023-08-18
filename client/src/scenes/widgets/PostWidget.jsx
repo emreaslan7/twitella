@@ -65,7 +65,7 @@ const PostWidget = ({
       },
     );
     const postComments = await response.json();
-    dispatch(setPostWithComments(postComments));
+    dispatch(setPostWithComments({ allComments: postComments }));
   };
 
   const handleShowComments = () => {
@@ -129,7 +129,7 @@ const PostWidget = ({
             <CommentsWidget comment={comment} key={comment._id} />
           ))}
           <Divider />
-          <MyCommentWidget picturePath={userPicturePath} />
+          <MyCommentWidget picturePath={userPicturePath} postId={postId} />
         </Box>
       )}
     </WidgetWrapper>

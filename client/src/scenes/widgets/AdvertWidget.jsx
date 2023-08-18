@@ -20,12 +20,12 @@ const AdvertWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="https://img.freepik.com/free-vector/cosmetics-bottle-natural-beauty-product_33099-1933.jpg?w=996&t=st=1692103513~exp=1692104113~hmac=af7e755b400c5aca98d44a31d2ec0eca72c813ba4779897eaaa4f2eeb278ee21"
+        src="https://i.pinimg.com/564x/48/a5/d7/48a5d72919533f9cd71ae6eaa85269fc.jpg"
         style={{ borderRadius: '0.75rem', margin: '0.75rem 0' }}
       />
       <FlexBetween>
-        <Typography color={main}>MikaCosmetics</Typography>
-        <Typography color={medium}>mikacosmetics.com</Typography>
+        <Typography color={main}>Chanel</Typography>
+        <Typography color={medium}>chanelcosmetics.com</Typography>
       </FlexBetween>
       <Typography color={medium} m="0.5rem 0">
         Your pathway to stunning and immaculate beauty and made sure your skin

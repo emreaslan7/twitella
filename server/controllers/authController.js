@@ -43,6 +43,9 @@ export const register = async (req, res) => {
   const savedUser = await newUser.save();
 
   fs.unlinkSync(req.files.picturePath.tempFilePath);
+  if (req.files) {
+   fs.unlinkSync(req.files.picture.tempFilePath);
+  }
   res.status(201).json(savedUser);
  } catch (err) {
   res.status(500).json({ error: err });

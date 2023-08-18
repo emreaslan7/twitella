@@ -52,8 +52,13 @@ export const authSlice = createSlice({
     },
 
     setPostWithComments: (state, action) => {
-      console.log('action payload: ', action.payload);
-      state.postWithComments = action.payload;
+      if (action.payload.comment) {
+        console.log('action payload: ', action.payload.comment);
+        state.postWithComments.push(action.payload.comment);
+      } else {
+        console.log('action payload: ', action.payload.allComments);
+        state.postWithComments = action.payload.allComments;
+      }
     },
   },
 });
