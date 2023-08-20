@@ -9,6 +9,7 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Divider,
 } from '@mui/material';
 import {
   Search,
@@ -25,12 +26,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLogin, setLogout, setMode } from 'state';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from 'components/FlexBetween';
+import UserImage from 'components/UserImage';
+import { hover } from '@testing-library/user-event/dist/hover';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
 
   const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
 
@@ -39,9 +43,35 @@ const Navbar = () => {
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
+  const medium = theme.palette.neutral.medium;
+  const main = theme.palette.neutral.main;
+
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+
+  const handleSearch = async () => {
+    try {
+      if (query.length > 0) {
+        const response = await fetch(`http://localhost:3001/users?q=${query}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setResults(data.data);
+      } else {
+        setResults([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <FlexBetween padding={'1rem 6%'} bgcolor={alt}>
@@ -61,17 +91,75 @@ const Navbar = () => {
           Twitella
         </Typography>
         {isNonMobileScreens && (
-          <FlexBetween
-            bgcolor={neutralLight}
-            borderRadius={'9px'}
-            gap={'3rem'}
-            padding={'0.1rem 1.5rem'}
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
+          <Box>
+            <Box
+              bgcolor={neutralLight}
+              borderRadius={'9px'}
+              gap={'3rem'}
+              padding={'0.1rem 1.5rem'}
+            >
+              <FlexBetween>
+                <InputBase
+                  placeholder="Search..."
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                  }}
+                />
+                <IconButton onClick={handleSearch}>
+                  <Search />
+                </IconButton>
+              </FlexBetween>
+            </Box>
+            {results.length > 0 && (
+              <Box
+                sx={{
+                  position: 'fixed',
+                  zIndex: 10,
+                  listStyle: 'none',
+                  backgroundColor: neutralLight,
+                  width: '246.163px',
+                  borderRadius: '9px',
+                  '& .MuiSelect-select:focus': {
+                    backgroundColor: neutralLight,
+                  },
+                }}
+              >
+                {results.map((user) => (
+                  <Box
+                    key={user._id}
+                    padding={'1rem 6%'}
+                    display={'flex'}
+                    justifyContent={'flex-start'}
+                    alignItems={'center'}
+                    gap={'1rem'}
+                    sx={{
+                      ':hover': {
+                        cursor: 'pointer',
+                        backgroundColor: medium,
+                        borderRadius: '9px',
+                      },
+                    }}
+                    onClick={() => {
+                      navigate(`/profile/${user._id}`);
+                      navigate(0);
+                    }}
+                  >
+                    <UserImage image={user.picturePath} size="50px" />
+                    <Box>
+                      <Typography>
+                        {user.firstName} {user.lastName}
+                      </Typography>
+                      <Typography color={main} fontSize="0.75rem">
+                        {user.location}
+                      </Typography>
+                    </Box>
+                    <Divider />
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
         )}
         {/* DESKTOP */}
       </FlexBetween>

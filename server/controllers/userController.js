@@ -1,6 +1,25 @@
 import express from "express";
 import User from "../models/userModel.js";
 
+export const searchUsers = async (req, res, next) => {
+ const query = req.query.q; // Arama terimi
+ try {
+  const users = await User.find({
+   $or: [
+    { firstName: { $regex: query, $options: "i" } }, // Büyük/küçük harf duyarsız arama
+    { lastName: { $regex: query, $options: "i" } },
+   ],
+  }).select("firstName lastName picturePath location");
+
+  res.status(200).json({
+   result: users.length,
+   data: users,
+  });
+ } catch (error) {
+  res.status(500).json({ message: "Arama işlemi sırasında bir hata oluştu." });
+ }
+};
+
 export const getUser = async (req, res, next) => {
  try {
   const user = await User.findById(req.params.id);
