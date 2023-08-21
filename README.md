@@ -1,27 +1,24 @@
-<div style="display: flex; align-items: center;">
-  <img src="client/public/t.png" style="margin-bottom: 20px;" alt="resim" width="34" height="34">
-  <h1 style="margin-bottom: 0;">WITELLA</h1>
-</div>
+# TWITELLA
 
 <br>
 
-**Twitella** is a cutting-edge MERN (MongoDB, Express.js, React, Node.js) stack application that empowers users to connect, share, and engage in meaningful conversations. Whether you're looking to stay updated on the latest trends, share your thoughts, or connect with like-minded individuals, Twitella provides a seamless platform to express yourself.
+***Twitella*** is a cutting-edge MERN (MongoDB, Express.js, React, Node.js) stack application that empowers users to connect, share, and engage in meaningful conversations. Whether you're looking to stay updated on the latest trends, share your thoughts, or connect with like-minded individuals, Twitella provides a seamless platform to express yourself.
 
 ## Features
 
-- **Personalized Feeds:** Tailored content recommendations ensure you never miss out on important updates.
-- **Interactive Posts:** Share text, images, and links in a dynamic and engaging way.
-- **Intuitive User Interface:** A sleek and user-friendly interface that prioritizes ease of use and aesthetics.
-- **Secure Authentication:** Utilizing modern authentication techniques to ensure the safety and privacy of user data.
-- **Responsive Design:** Seamlessly access Twitella on any device, whether it's a desktop, tablet, or smartphone.
+- ***Personalized Feeds:*** Tailored content recommendations ensure you never miss out on important updates.
+- ***Interactive Posts:*** Share text, images, and links in a dynamic and engaging way.
+- ***Intuitive User Interface:*** A sleek and user-friendly interface that prioritizes ease of use and aesthetics.
+- ***Secure Authentication:*** Utilizing modern authentication techniques to ensure the safety and privacy of user data.
+- ***Responsive Design:*** Seamlessly access Twitella on any device, whether it's a desktop, tablet, or smartphone.
 
 ## Technologies Used
 
-- **Frontend:** Crafted with React.js and Material UI for a modern and interactive user interface.
-- **State Management:** Utilized Redux for efficient state management and data flow.
-- **Backend:** Node.js, Express.js for robust server-side development.
-- **Database:** MongoDB for efficient data storage and retrieval.
-- **Authentication:** Implemented secure user authentication for enhanced privacy.
+- ***Frontend:*** Crafted with React.js and Material UI for a modern and interactive user interface.
+- ***State Management:*** Utilized Redux for efficient state management and data flow.
+- ***Backend:*** Node.js, Express.js for robust server-side development.
+- ***Database:*** MongoDB for efficient data storage and retrieval.
+- ***Authentication:*** Implemented secure user authentication for enhanced privacy.
 
 ## Explore Twitella
 
