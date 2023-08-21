@@ -12,7 +12,6 @@ import createdTimeConvert from 'utils/createdTimeConvert.js';
 import { setPostCommentLike } from 'state';
 
 const CommentsWidget = ({ comment }) => {
-  console.log(comment);
   const [timeAgo, setTimeAgo] = useState(null);
   const dispatch = useDispatch();
 
@@ -27,16 +26,18 @@ const CommentsWidget = ({ comment }) => {
   const likeCount = Object.keys(comment?.likes).length;
 
   const patchLikeComment = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${comment._id}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `https://twitella-api.vercel.app/posts/${comment._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     const updatedComment = await response.json();
     dispatch(setPostCommentLike({ comment: updatedComment }));
-    console.log(updatedComment);
   };
 
   useEffect(() => {

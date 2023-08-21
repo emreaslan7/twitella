@@ -62,7 +62,7 @@ const MyPostWidget = ({ picturePath }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/posts', {
+      const response = await fetch('https://twitella-api.vercel.app/posts', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -71,7 +71,6 @@ const MyPostWidget = ({ picturePath }) => {
       });
 
       const posts = await response.json();
-      console.log('posts', posts);
       handleOpenAlert();
       dispatch(setPosts({ posts }));
       setImage(null);

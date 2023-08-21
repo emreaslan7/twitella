@@ -7,8 +7,6 @@ export const postComment = async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
 
-  console.log(req.user);
-
   const post = await Post.findById(id);
   const newComment = new Comment({
    user: req.user.id, // Yorumu yapan kullanıcının ID'si yerine User'ın
@@ -51,7 +49,6 @@ export const getPostComments = async (req, res) => {
   const post = await Post.findById(req.params.id).populate("comments");
 
   if (!post) {
-   console.log("Gönderi bulunamadı");
    return null;
   }
 
@@ -106,7 +103,6 @@ export const likeComment = async (req, res) => {
   comment.user = commentUser;
   const updatedComment = await comment.save();
 
-  console.log(updatedComment);
   res.status(200).json(updatedComment);
  } catch (err) {
   res.status(404).json({ msg: err.message });

@@ -14,7 +14,6 @@ const MyCommentWidget = ({ postId }) => {
   const { picturePath } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
 
-  console.log(postId);
   // snackbar alerts start
   const [openAlert, setOpenAlert] = useState(false);
   const handleOpenAlert = () => {
@@ -34,7 +33,7 @@ const MyCommentWidget = ({ postId }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/posts/${postId}/comments`,
+        `https://twitella-api.vercel.app/posts/${postId}/comments`,
         {
           method: 'POST',
           headers: {
@@ -45,7 +44,6 @@ const MyCommentWidget = ({ postId }) => {
       );
 
       const responseComment = await response.json();
-      console.log('responseComment', responseComment);
       handleOpenAlert();
       dispatch(setPostWithComments({ comment: responseComment }));
       setPost('');

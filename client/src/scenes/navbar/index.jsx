@@ -56,13 +56,16 @@ const Navbar = () => {
   const handleSearch = async () => {
     try {
       if (query.length > 0) {
-        const response = await fetch(`http://localhost:3001/users?q=${query}`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `https://twitella-api.vercel.app/users?q=${query}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
           },
-        });
+        );
         const data = await response.json();
         setResults(data.data);
       } else {

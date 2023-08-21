@@ -42,7 +42,6 @@ export const authSlice = createSlice({
     },
 
     setPostCommentLike: (state, action) => {
-      console.log(action.payload);
       const updatedComment = state.postWithComments.map((comment) => {
         if (comment._id === action.payload.comment._id)
           return action.payload.comment;
@@ -53,10 +52,8 @@ export const authSlice = createSlice({
 
     setPostWithComments: (state, action) => {
       if (action.payload.comment) {
-        console.log('action payload: ', action.payload.comment);
         state.postWithComments.push(action.payload.comment);
       } else {
-        console.log('action payload: ', action.payload.allComments);
         state.postWithComments = action.payload.allComments;
       }
     },
